@@ -7,6 +7,9 @@
   <Folder Name="/Solution Items/">
     <File Path="README.md" />
   </Folder>
+  <Project Path="fms_dual/fms_dual.vcxproj" Id="7d18a007-725f-4866-89ae-04e74aebc497">
+    <Platform Solution="*|ARM64" Project="x64" />
+  </Project>
   <Project Path="xll24/xll.vcxproj" Id="7d7375af-e7e3-42d3-a00f-d8ee22c39924">
     <Platform Project="x64" />
   </Project>

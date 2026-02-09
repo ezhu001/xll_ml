@@ -212,15 +212,18 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="fms_dual\fms_dual.h" />
+    <ClInclude Include="fms_math.h" />
     <ClInclude Include="fms_option.h" />
     <ClInclude Include="fms_option_black.h" />
-    <ClInclude Include="fms_dual.h" />
     <ClInclude Include="fms_error.h" />
     <ClInclude Include="fms_linalg.h" />
+    <ClInclude Include="fms_option_discrete.h" />
     <ClInclude Include="fms_perceptron.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="xll_black.cpp" />
+    <ClCompile Include="xll_math.cpp" />
     <ClCompile Include="xll_ml.cpp" />
   </ItemGroup>
   <ItemGroup>

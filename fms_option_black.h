@@ -2,6 +2,7 @@
 #pragma once
 #include <cmath>
 #include <numbers>
+#include "fms_math.h"
 #include "fms_option.h"
 
 namespace fms::option::black {
@@ -14,7 +15,7 @@ namespace fms::option::black {
 		// TODO: show ...
 		static X cdf(X x)
 		{
-			return 0.5 * (1 + std::erf(x / std::numbers::sqrt2));
+			return 0.5 * (1 + math::erf_as(x / std::numbers::sqrt2));
 		}
 		// cumulative distribution function
 		T _cdf(X x, S s) const override

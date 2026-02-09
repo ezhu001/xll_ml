@@ -9,8 +9,13 @@
 
 #pragma once
 #include <cmath>
+#include <limits>
 
 namespace fms::option {
+
+	// Return Not a Number instead of throwing exception.
+	template<class X>
+	constexpr X NaN = std::numeric_limits<X>::quiet_NaN();
 
 	// Interface for option pricing models. 
 	template<class F = double, class S = double>
@@ -40,6 +45,11 @@ namespace fms::option {
 		template<class F = double, class S = double, class K = double>
 		auto moneyness(F f, S s, K k, const model<F, S>& m)
 		{
+			using T = model<F, S>::T;
+			if (f <= 0 or s <= 0 or k <= 0) {
+				return NaN<T>;
+			}
+
 			return (std::log(k / f) + m.cgf(s)) / s;
 		}
 
@@ -49,6 +59,13 @@ namespace fms::option {
 			auto x = moneyness(f, s, k, m);
 
 			return k * m.cdf(x, 0) - f * m.cdf(x, s);
+		}
+		
+		// TODO: implement using put-call parity: call = put + f - k
+		template<class F = double, class S = double, class K = double>
+		auto call(F f, S s, K k, const model<F, S>& m)
+		{
+			return 0; 
 		}
 	}
 

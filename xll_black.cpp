@@ -32,5 +32,6 @@ double WINAPI xll_black_moneyness(double f, double s, double k)
 {	
 #pragma XLLEXPORT
 	normal m;
+
 	return moneyness(f, s, k, m);
 }

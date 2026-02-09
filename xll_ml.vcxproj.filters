@@ -24,13 +24,19 @@
     <ClInclude Include="fms_error.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="fms_dual.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="fms_option.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="fms_option_black.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="fms_math.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="fms_option_discrete.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="fms_dual\fms_dual.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -39,6 +45,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="xll_black.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="xll_math.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
