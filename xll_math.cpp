@@ -1,7 +1,8 @@
 // xll_math.cpp - Math functions
 #include "fms_math.h"
-#include "xll24/include/xll.h"
+#include "xll_ml.h"
 
+#undef CATEGORY
 #define CATEGORY L"MATH"
 
 using namespace xll;

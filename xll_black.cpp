@@ -1,7 +1,8 @@
 // xll_black.cpp - Generalized Black model
 #include "fms_option_black.h"
-#include "xll24/include/xll.h"
+#include "xll_ml.h"
 
+#undef CATEGORY
 #define CATEGORY L"BLACK"
 
 using namespace xll;

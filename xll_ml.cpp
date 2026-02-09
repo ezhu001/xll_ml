@@ -1,9 +1,6 @@
 ﻿// xll_ml.cpp
 #include "fms_perceptron.h"
-#undef ensure
-#include "xll24/include/xll.h"
-
-#define CATEGORY L"ML"
+#include "xll_ml.h"
 
 using namespace xll;
 using namespace fms::perceptron;

@@ -220,6 +220,7 @@
     <ClInclude Include="fms_linalg.h" />
     <ClInclude Include="fms_option_discrete.h" />
     <ClInclude Include="fms_perceptron.h" />
+    <ClInclude Include="xll_ml.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="xll_black.cpp" />

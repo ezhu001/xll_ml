@@ -39,6 +39,9 @@
     <ClInclude Include="fms_dual\fms_dual.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="xll_ml.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="xll_ml.cpp">
