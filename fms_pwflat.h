@@ -92,12 +92,11 @@ namespace fms::pwflat {
 	}
 #endif // _DEBUG
 
-	// TODO: int_0^u f(t) dt
 	// Integral from 0 to u of f.
 	template<class T, class F>
 	constexpr F integral(T u, size_t n, const T* t, const F* f, F _f = math::NaN<F>)
 	{
-		if (u < 0)  return NaN<F>;
+		if (u < 0)  return fms::math::NaN<F>;
 		if (u == 0) return 0;
 		if (n == 0) return u * _f;
 
@@ -129,7 +128,7 @@ namespace fms::pwflat {
 			static_assert(integral(2., 3, t, f) == 4 + 5);
 			static_assert(integral(2.5, 3, t, f) == 4 + 5 + 6 * 0.5);
 			static_assert(integral(3., 3, t, f) == 4 + 5 + 6);
-			static_assert(std::isnan(integral(3.1, 3, t, f)));
+			static_assert(math::isnan(integral(3.1, 3, t, f)));
 			static_assert(integral(3.5, 3, t, f, 7.) == 4 + 5 + 6 + 7 * 0.5);
 		}
 

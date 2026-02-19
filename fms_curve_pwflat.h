@@ -17,23 +17,22 @@ namespace fms::curve {
 	public:
 		// constant curve
 		constexpr pwflat()
-		{
-		}
+		{ }
 		pwflat(size_t n, const T* t, const F* f)
 			: t_(t, t + n), f_(f, f + n)
 		{
-			ENSURE(fms::pwflat::monotonic(n, t) || clear());
+			ensure(fms::pwflat::monotonic(n, t));
 		}
 		pwflat(std::span<T> t, std::span<F> f)
 			: t_(t.begin(), t.end()), f_(f.begin(), f.end())
 		{
-			ENSURE(t_.size() == f_.size() || (!"pwflat: t and f must have the same size" || clear()));
+			ensure(t_.size() == f_.size() || !"pwflat: t and f must have the same size");
 		}
 		pwflat(const pwflat&) = default;
 		pwflat& operator=(const pwflat&) = default;
 		pwflat(pwflat&&) = default;
 		pwflat& operator=(pwflat&&) = default;
-		~pwflat() = default;
+		virtual ~pwflat() = default;
 
 		// Equal values.
 		bool operator==(const pwflat& c) const
@@ -63,18 +62,20 @@ namespace fms::curve {
 		{
 			return t_.size();
 		}
+		// TODO: change time return pointer constant T*
 		const auto time() const
 		{
-			return fms::iterable::make_interval(t_);
+			return 0; // fms::iterable::make_interval(t_);
 		}
+		// TODO: change rate return pointer constant F*
 		const auto rate() const
 		{
-			return fms::iterable::make_interval(f_);
+			return 0; // fms::iterable::make_interval(f_);
 		}
 
 		pwflat& push_back(T t, F f)
 		{
-			ENSURE(size() == 0 || t >= t_.back());
+			ensure(size() == 0 || t >= t_.back());
 
 			t_.push_back(t);
 			f_.push_back(f);
@@ -95,6 +96,7 @@ namespace fms::curve {
 	inline int pwflat_test()
 	{
 		{
+			// more constexpr tests.
 			pwflat<> c;
 			auto c2(c);
 			assert(c == c2);

@@ -17,35 +17,35 @@ namespace fms::curve {
 		using time_type = T;
 		using rate_type = F;
 
-		virtual ~base() {}
+		constexpr virtual ~base() {}
 
 		// Forward at u.
-		constexpr F forward(T u, T t = infinity<T>, F f = math::NaN<F>) const
+		constexpr F forward(T u, T t = math::infinity<T>, F f = math::NaN<F>) const
 		{
 			return u < 0 ? math::NaN<F> : u <= t ? _forward(u) : f;
 		}
-		constexpr F operator()(T u, T t = infinity<T>, F f = math::NaN<F>) const
+		constexpr F operator()(T u, T t = math::infinity<T>, F f = math::NaN<F>) const
 		{
 			return forward(u, t, f);
 		}
 
 		// Integral from 0 to u of forward: int_0^u f(s) ds.
-		constexpr F integral(T u, T t = infinity<T>, F f = math::NaN<F>) const
+		constexpr F integral(T u, T t = math::infinity<T>, F f = math::NaN<F>) const
 		{
 			return u < 0 ? math::NaN<F> : u == 0 ? 0 : u <= t ? _integral(u) : _integral(t) + f * (u - t);
 		}
 
 		// Price of one unit received at time u.
-		constexpr F discount(T u, T t = infinity<T>, F f = math::NaN<F>) const
+		constexpr F discount(T u, T t = math::infinity<T>, F f = math::NaN<F>) const
 		{
 			return u < 0 ? math::NaN<F> : std::exp(-integral(u, t, f));
 		}
 
 		// Spot/yield is the average of the forward over [0, u].
 		// If u is small, use the forward.
-		constexpr F spot(T u, T t = infinity<T>, F f = math::NaN<F>) const
+		constexpr F spot(T u, T t = math::infinity<T>, F f = math::NaN<F>) const
 		{
-			return u < 0 ? math::NaN<F> : u < sqrt_epsilon<T> ? forward(u, t, f) : integral(u, t, f) / u;
+			return u < 0 ? math::NaN<F> : u < math::sqrt_epsilon<T> ? forward(u, t, f) : integral(u, t, f) / u;
 		}
 
 	private:
@@ -61,7 +61,7 @@ namespace fms::curve {
 		T _t;
 		F _f;
 	public:
-		extrapolate(const base<T, F>& f, T _t = infinity<T>, F _f = math::NaN<F>)
+		extrapolate(const base<T, F>& f, T _t = math::infinity<T>, F _f = math::NaN<F>)
 			: f(f), _t(_t), _f(_f)
 		{
 		}
@@ -82,8 +82,10 @@ namespace fms::curve {
 	public:
 		constexpr constant(F f = 0)
 			: f(f)
-		{
-		}
+		{ }
+		constexpr constant(const constant& c) = default;
+		constexpr constant& operator=(const constant& c) = default;
+		constexpr ~constant() = default;
 
 		constexpr F _forward(T) const override
 		{
@@ -98,8 +100,9 @@ namespace fms::curve {
 	inline int constant_test()
 	{
 		{
-			curve::constant c(1.);
-			assert(std::isnan(constant(1.).forward(-1)));
+			constexpr curve::constant c(1.);
+			static_assert(math::isnan(constant(1.).forward(-1)));
+			// TODO: replace assert by static_assert.
 			assert(c.forward(0.) == 1);
 			assert(c.integral(0.) == 0);
 			assert(c.integral(2.) == 2.);
@@ -118,7 +121,7 @@ namespace fms::curve {
 		F s;
 		T t0, t1;
 	public:
-		constexpr bump(F s, T t0 = 0, T t1 = infinity<T>)
+		constexpr bump(F s, T t0 = 0, T t1 = math::infinity<T>)
 			: s(s), t0(t0), t1(t1)
 		{
 			ensure(t0 <= t1);
@@ -133,13 +136,14 @@ namespace fms::curve {
 		}
 		constexpr F _integral(T u) const override
 		{
-			return s * (std::min(u, t1) - t0) * (u >= t0);
+			return s * ((std::min)(u, t1) - t0) * (u >= t0);
 		}
 	};
 #ifdef _DEBUG
 	inline int bump_test()
 	{
 		{
+			// TODO: use static_assert.
 			bump b(0.5, 1., 2.);
 			assert(b.forward(0.9) == 0);
 			assert(b.forward(1) == 0.5);
@@ -240,7 +244,7 @@ namespace fms::curve {
 
 // Add two curves.
 template<class T, class F>
-constexpr  fms::curve::plus<T, F> operator+(const fms::curve::base<T, F>& f, const fms::curve::base<T, F>& g)
+constexpr fms::curve::plus<T, F> operator+(const fms::curve::base<T, F>& f, const fms::curve::base<T, F>& g)
 {
 	return fms::curve::plus<T, F>(f, g);
 }
