@@ -5,6 +5,7 @@
 
 namespace fms::instrument {
 
+	// Sequence of times u_j and cash flows c_k
 	template<class U = double, class C = double>
 	class base {
 	public:
@@ -49,26 +50,26 @@ namespace fms::instrument {
 
 	// Instrument value class.
 	template<class U = double, class C = double>
-	class fixed_income: public base<U, C>
+	class instrument: public base<U, C>
 	{
 		std::vector<U> u;
 		std::vector<C> c;
 	public:
-		constexpr fixed_income(const std::vector<U>& u, const std::vector<C>& c)
+		constexpr instrument(const std::vector<U>& u, const std::vector<C>& c)
 			: u(u), c(c)
 		{
 			ensure(u.size() == c.size());
 			ensure(std::is_sorted(u.begin(), u.end()));
 		}
-		constexpr fixed_income(std::span<U> u, std::span<C> c)
+		constexpr instrument(std::span<U> u, std::span<C> c)
 			: u(u.begin(), u.end()), c(c.begin(), c.end())
 		{
 			ensure(u.size() == c.size());
 			ensure(std::is_sorted(u.begin(), u.end()));
 		}
-		constexpr fixed_income(const fixed_income& z) = default;
-		constexpr fixed_income& operator=(const fixed_income& z) = default;
-		virtual ~fixed_income() = default;
+		constexpr instrument(const instrument& z) = default;
+		constexpr instrument& operator=(const instrument& z) = default;
+		virtual ~instrument() = default;
 
 		constexpr std::size_t _size() const noexcept override
 		{
@@ -85,11 +86,11 @@ namespace fms::instrument {
 	};
 
 	template<class U = double, class C = double>
-	class zero_coupon_bond : public fixed_income<U, C>
+	class zero_coupon_bond : public instrument<U, C>
 	{
 	public:
 		zero_coupon_bond(U u, C c = C(1))
-			: fixed_income<U, C>(std::span(&u, 1), std::span(&c, 1))
+			: instrument<U, C>(std::span(&u, 1), std::span(&c, 1))
 		{ }
 		zero_coupon_bond(const zero_coupon_bond& z) = default;
 		zero_coupon_bond& operator=(const zero_coupon_bond& z) = default;
@@ -126,14 +127,14 @@ namespace fms::instrument {
 	}
 	// Simple bond paying c at frequency f and 1 + c at maturity u.
 	template<class U = double, class C = double>
-	class bond : public fixed_income<U, C>
+	class bond : public instrument<U, C>
 	{
 		U u; // maturity
 		C c; // coupon
 		frequency f;
 	public:
 		bond(U u, C c, frequency f = frequency::semiannual)
-			: fixed_income<U, C>(periods(u, f), payments(u, c, f)), u(u), c(c), f(f)
+			: instrument<U, C>(periods(u, f), payments(u, c, f)), u(u), c(c), f(f)
 		{ }
 		bond(const bond& b) = default;
 		bond& operator=(const bond& b) = default;

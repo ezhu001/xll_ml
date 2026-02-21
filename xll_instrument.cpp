@@ -11,7 +11,7 @@ AddIn xai_instrument_(
 		Arg(XLL_FP, L"u", L"is the vector of cash flow times."),
 		Arg(XLL_FP, L"c", L"is the vector of cash flow amounts."),
 		})
-		.Uncalced()
+	.Uncalced()
 	.Category(CATEGORY)
 	.FunctionHelp(L"Return a handle to an instrument with cash flows c at times u.")
 );
@@ -21,7 +21,7 @@ HANDLEX WINAPI xll_instrument_(_FP12* pu, _FP12* pc)
 	HANDLEX h = INVALID_HANDLEX;
 
 	try {
-		handle<instrument::base<>> h_(new instrument::fixed_income(span(*pu), span(*pc)));
+		handle<instrument::base<>> h_(new instrument::instrument(span(*pu), span(*pc)));
 		ensure(h_);
 		h = h_.get();
 	}
@@ -49,6 +49,7 @@ _FP12* WINAPI xll_instrument(HANDLEX h)
 	static FPX uc;
 
 	try {
+		uc.resize(0, 0);
 		handle<instrument::base<>> h_(h);
 		ensure(h_);
 		int n = static_cast<int>(h_->size());

@@ -83,10 +83,13 @@
     <ClCompile Include="xll_instrument.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="xll_curve.cpp">
+    <ClCompile Include="xll_curve_pwflat.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="xll_bootstrap.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="xll_valuation.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

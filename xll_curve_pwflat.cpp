@@ -15,13 +15,13 @@ static AddIn xai_curve_pwflat_(
 	.Category(CATEGORY)
 	.FunctionHelp(L"Return a handle to a curve with forward rates f at times t.")
 );
-HANDLEX WINAPI xll_curve_pwflat_(_FP12* pt, _FP12* pf, double _f)
+HANDLEX WINAPI xll_curve_pwflat_(_FP12* pt, _FP12* pf)
 {
 #pragma XLLEXPORT
 	HANDLEX h = INVALID_HANDLEX;
 
 	try {
-		handle<curve::pwflat<>> h_(new curve::pwflat(span(*pt), span(*pf)));
+		handle<curve::base<>> h_(new curve::pwflat(span(*pt), span(*pf)));
 		ensure(h_);
 		h = h_.get();
 	}
@@ -50,12 +50,13 @@ _FP12* WINAPI xll_curve_pwflat(HANDLEX h)
 
 	try {
 		tf.resize(0, 0);
-		handle<curve::pwflat<>> h_(h);
+		handle<curve::base<>> h_(h);
 		ensure(h_);
-		int n = (int)h_->size();
+		curve::pwflat<>* ptf = h_.as<curve::pwflat<>>();
+		int n = (int)ptf->size();
 		tf.resize(2, n);
-		std::copy_n(h_->time(), n, tf.array());
-		std::copy_n(h_->rate(), n, tf.array() + n);
+		std::copy_n(ptf->time(), n, tf.array());
+		std::copy_n(ptf->rate(), n, tf.array() + n);
 	}
 	catch (const std::exception& ex) {
 		XLL_ERROR(ex.what());
@@ -67,4 +68,5 @@ _FP12* WINAPI xll_curve_pwflat(HANDLEX h)
 	return tf.get();
 }
 
-// TODO: Implement CURVE.PWFLAT.FORWARD, CURVE.PWFLAT.DISCOUNT, CURVE.PWFLAT.SPOT
+// TODO: Implement CURVE.FORWARD, CURVE.DISCOUNT, CURVE.SPOT
+// use `handle<curve::base<>> h_(h)

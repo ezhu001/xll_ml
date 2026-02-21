@@ -41,26 +41,33 @@ namespace fms::curve {
 
 		return { uc.u, _f };
 	}
-	// Bootstrap a piecewise flat curve from instruments and prices.
-	template<class U = double, class C = double, class P = double>
-	constexpr auto bootstrap(std::size_t n, const instrument::base<U,C>* is, const P* ps, double _t = 0, double _f = 0.03)
-	{
-		curve::pwflat<U,P> f;
 
-		// TODO: Adjust this to take array of instrument::base<U,C>* pointers
-		// Hint: Use a for loop like in the present value function.
+	// Bootstrap a piecewise flat curve from instruments and prices.
+	template<class I, class U = double, class C = double, class P = double>
+	constexpr curve::pwflat<U, P> bootstrap(std::span<const I> is, std::span<const P> ps,
+		double _t = 0, double _f = 0.03)
+		//requires std::convertible_to<I,const instrument::base<U,C>&>
+	{
+		curve::pwflat<U, P> f;
+
+		/*
+		// TODO: Use a for loop like in the present value function.
+		// Assume is[i] is a const reference to an instrument<U,C>
 		while (is and ps) {
 			std::tie(_t, _f) = bootstrap0(*is, f, _t, _f, *ps);
 			f.push_back(_t, _f);
+			// f.push_back(bootstrap0(...));
 			++is;
 			++ps;
 		}
+		*/
 
 		return f;
 	}
 #ifdef _DEBUG
 	inline int bootstrap_test()
 	{
+		// TODO: Delete code that is not working.
 		using namespace fms::iterable;
 		{
 			curve::constant<> f;
