@@ -37,7 +37,11 @@ namespace fms::option::discrete {
 		{
 			double sum = 0;
 			for (int i = 0; i < x; ++i) {
-				sum += exp(s * xi[i] - _cgf(s)) * pi[i];
+				// Also had few lines of typo here, we are using xi[i] to compare instead of xi, which is an array.
+				// I just place xi before
+				if (xi[i] <= x) {
+					sum += exp(s * xi[i] - _cgf(s)) * pi[i];
+				}
 			}
 			return sum; // TODO: implement
 		}

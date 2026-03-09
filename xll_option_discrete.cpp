@@ -27,12 +27,13 @@ HANDLEX WINAPI xll_option_discrete(_FP12* x, _FP12* p)
 
 		size_t n = size(*x);
 
-		discrete::model mod = discrete::model(n, (double*)x, (double*)p);
+		// I realized that we should be applying the array property of x as _FP12*.
+		// While it was so obvious, I all the way did not realize it and this is the major problem.
+		discrete::model mod = discrete::model(n, x->array,p->array);
 
-		//Before that I could do this by just inputting the FP12 but now it seems like not working
-		//discrete::model mod = discrete::model(n, x, p);
-
-		handle<discrete::model<>> m_(new discrete::model(std::move(mod)));
+		// Also that as the model should be considered as a base<> therefore I should let the handle
+		// be handle<base<>> instead of handle<discrete::model<>>
+		handle<base<>> m_(new discrete::model(std::move(mod)));
 		ensure(m_);
 		result = m_.get();
 	}
@@ -46,7 +47,7 @@ HANDLEX WINAPI xll_option_discrete(_FP12* x, _FP12* p)
 	return result;
 }
 
-AddIn xai_option_dicrete_getter(
+AddIn xai_option_discrete_getter(
 	Function(XLL_FP, L"xll_option_discrete_getter", L"" CATEGORY L".DISCRETE")
 	.Arguments({
 		Arg(XLL_HANDLEX, L"x", L"is a discrete model handle.")
@@ -61,35 +62,17 @@ _FP12* WINAPI xll_option_discrete_getter(HANDLEX h)
 	static FPX result;
 
 	try {
-		/*
-		handle<discrete::model<>> m(h);
-
-		size_t n = m->xi.size();
-
-		ensure(m->xi.size() == m->pi.size());
-		
-		// Well I see that x is normalized as soon as the class discrete::model is created so I guess don't have to do it now.
-
-		result.resize(static_cast<int>(n), 1);
-
-		for (size_t i = 0; i < n; ++i) {
-			result(static_cast<int>(i), 0) = m->xi[i];
-		}
-
-		return result.get();
-		*/
 
 		result.resize(0, 0);
-		handle<discrete::model<>> m(h);
+		handle<base<>> m(h);
 		ensure(m);
 		discrete::model<>* ptf = m.as<discrete::model<>>();
 		size_t n = ptf->xi.size();
 		
-		result.resize(static_cast<int>(n), 2);
+		result.resize(static_cast<int>(n), 1);
 
 		for (size_t i = 0; i < n; ++i) {
 			result(static_cast<int>(i), 0) = ptf->xi[i];
-			result(static_cast<int>(i), 1) = ptf->pi[i];
 		}
 
 		return result.get();
