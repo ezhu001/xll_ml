@@ -2,10 +2,13 @@
 #pragma once
 #include <valarray>
 #include "fms_option.h"
+#include <numbers>
+#include "fms_math.h"
 
 namespace fms::option::discrete {
 	template<class F = double, class S = double>
-	class model : option::base<F, S> {
+	struct model : option::base<F, S> {
+	public:
 		std::valarray<F> xi, pi; // P(X = x_i) = p_i
 	
 		void normalize()
@@ -21,18 +24,32 @@ namespace fms::option::discrete {
 		{
 			normalize();
 		}
+
+		model(const model&) = default;
+		model& operator=(const model&) = default;
+		model(model&&) = default;
+		model& operator=(model&&) = default;
+		virtual ~model() = default;
 	
 		// E[exp(s X - kappa(s)) 1(X <= x) ] 
 		//   = sum_{x_i <= x} exp(s x_i - kappa(s)) pi_i
 		F _cdf(F x, S s) const override
 		{
-			return 0; // TODO: implement
+			double sum = 0;
+			for (int i = 0; i < x; ++i) {
+				sum += exp(s * xi[i] - _cgf(s)) * pi[i];
+			}
+			return sum; // TODO: implement
 		}
 	
 		// kappa(s) = log E[exp(s X)] = log sum p_i exp(s x_i)
 		S _cgf(S s) const override
 		{
-			return 0; // TODO: implement
+			double result = 0;
+			for (int i = 0; i < xi.size(); ++i) {
+				result += pi[i] * exp(s * xi[i]);
+			}
+			return log(result); // TODO: implement
 		}
 	};
 } // namespace fms::option::discrete
